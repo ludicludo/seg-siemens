@@ -14,7 +14,7 @@ logger.setLevel(logging.INFO)
 
 def argument():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-s", "--seg", help="input segmentation dicom file")
+    parser.add_argument("-s", "--seg", help="input segmentation dicom file", required=True)
     parser.add_argument("-o", "--out", help="output segmentation dicom file")
     return parser.parse_args()
 
