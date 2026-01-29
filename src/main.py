@@ -39,7 +39,6 @@ def main():
     print(f"volume cm3: {mask.sum()}")
 
     series_number = 100
-    breakpoint()
     pt_datasets = load_dicom_series(segment_file.parent, "PT")
     seg_object = create_seg_object(pt_datasets, mask, series_number)
     seg_object.save_as(segment_file.parent / "seg_test.dcm")
