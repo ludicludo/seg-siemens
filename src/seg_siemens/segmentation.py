@@ -4,6 +4,7 @@ import numpy as np
 import pydicom
 from pydicom.misc import is_dicom
 from pydicom import Dataset
+from pydicom.sr.codedict import codes
 from highdicom.seg import (
     SegmentDescription,
     SegmentAlgorithmTypeValues,
@@ -15,9 +16,8 @@ from highdicom.uid import UID
 
 import logging
 
-logging.basicConfig()
+logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
-
 
 def validate_dicom_file(file_path: Path) -> bool:
     """Validate the input DICOM file path."""
@@ -130,7 +130,7 @@ def check_series_compatibility(dicom_series, mask_array):
         if (dicom_file.Rows, dicom_file.Columns) != mask_slice.shape:
             return False
         if not np.allclose(
-            dicom_file.PixelSpacing, [mask_slice.shape[1], mask_slice.shape[0]]
+            [dicom_file.Rows, dicom_file.Columns], [mask_slice.shape[1], mask_slice.shape[0]]
         ):
             return False
 
@@ -150,14 +150,15 @@ def create_segment_description(segment_number: int = 1) -> SegmentDescription:
     algorithm_identification = AlgorithmIdentificationSequence(
         name="Tumor Segmentation",
         version="1.0",
-        family=SegmentAlgorithmTypeValues.AUTOMATIC,
+        family=codes.cid7162.ArtificialIntelligence,
     )
 
     segment_description = SegmentDescription(
         segment_number=segment_number,
         segment_label="Tumor",
-        segmented_property_category="T",
-        segmented_property_type="T-D8001",
+        segmented_property_category=codes.SCT.MorphologicallyAbnormalStructure,
+        segmented_property_type=codes.SCT.Tumor,
+        algorithm_type=SegmentAlgorithmTypeValues.AUTOMATIC,
         algorithm_identification=algorithm_identification,
         tracking_uid=UID(),
         tracking_id="1",
@@ -227,6 +228,7 @@ def create_seg_object(
         manufacturer_model_name="Your Model",
         software_versions="1.0",
         device_serial_number="Your Serial Number",
+        series_description="Segmentation from ICO script"
     )
     return seg
 
