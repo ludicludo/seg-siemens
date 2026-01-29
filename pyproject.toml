@@ -1,0 +1,21 @@
+[project]
+name = "seg-siemens"
+version = "0.1.0"
+description = "Stuff around Siemens DICOM segmentation files"
+readme = "README.md"
+authors = [
+    { name = "Ludovic Ferrer", email = "ludovic.ferrer@ico.unicancer.fr" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "highdicom>=0.27.0",
+    "ipython>=9.9.0",
+    "pydicom>=3.0.1",
+]
+
+[project.scripts]
+seg-siemens = "main:main"
+
+[build-system]
+requires = ["uv_build>=0.9.23,<0.10.0"]
+build-backend = "uv_build"
